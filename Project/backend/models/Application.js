@@ -6,21 +6,15 @@ const applicationSchema = new mongoose.Schema({
     ref: 'Job',
     required: true
   },
-  user: {
+  applicant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  matchScore: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
-  },
   status: {
     type: String,
-    enum: ['Applied', 'Under Review', 'Shortlisted', 'Rejected', 'Accepted'],
-    default: 'Applied'
+    enum: ['pending', 'reviewed', 'shortlisted', 'rejected', 'accepted'],
+    default: 'pending'
   },
   appliedAt: {
     type: Date,
@@ -28,18 +22,13 @@ const applicationSchema = new mongoose.Schema({
   },
   notes: {
     type: String,
-    default: ''
+    trim: true
   }
 }, {
   timestamps: true
 });
 
-// Compound index to prevent duplicate applications
-applicationSchema.index({ job: 1, user: 1 }, { unique: true });
-
-// Index for efficient queries
-applicationSchema.index({ user: 1, status: 1 });
-applicationSchema.index({ job: 1, status: 1 });
-applicationSchema.index({ matchScore: -1 });
+// Ensure one application per job per user
+applicationSchema.index({ job: 1, applicant: 1 }, { unique: true });
 
 module.exports = mongoose.model('Application', applicationSchema);

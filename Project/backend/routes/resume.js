@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const { uploadResume, getResume, deleteResume } = require('../controllers/resumeController');
+const { uploadResume, getResume, deleteResume, analyzeResume } = require('../controllers/resumeController');
 const { protect } = require('../middleware/authMiddleware');
 
 // Configure multer for file upload
@@ -43,5 +43,6 @@ const upload = multer({
 router.post('/upload', protect, upload.single('resume'), uploadResume);
 router.get('/', protect, getResume);
 router.delete('/', protect, deleteResume);
+router.get('/analyze', protect, analyzeResume);
 
 module.exports = router;

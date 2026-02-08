@@ -1,42 +1,30 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
-import JobList from './components/JobList';
-import Dashboard from './components/Dashboard';
-import MyJobs from './components/MyJobs';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+import ProtectedRoutes from './components/ProtectedRoutes';
+import MainLayout from './layout/MainLayout';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
         <Router>
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/jobs" element={<JobList />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/my-jobs" element={<MyJobs />} />
-            <Route path="/" element={<Login />} />
+            <Route path="/*" element={
+              <MainLayout>
+                <ProtectedRoutes />
+              </MainLayout>
+            } />
           </Routes>
         </Router>
-      </AuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

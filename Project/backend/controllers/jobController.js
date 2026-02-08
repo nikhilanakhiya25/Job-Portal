@@ -159,27 +159,24 @@ const applyForJob = async (req, res) => {
     }
 
     // Check if user already applied
-    const alreadyApplied = job.applicants.some(
-      applicant => applicant.user.toString() === req.user.id
-    );
+    const existingApplication = await Application.findOne({
+      job: req.params.id,
+      applicant: req.user.id
+    });
 
-    if (alreadyApplied) {
+    if (existingApplication) {
       return res.status(400).json({ message: 'Already applied for this job' });
     }
 
-    // Add applicant
-    job.applicants.push({
-      user: req.user.id,
-      appliedAt: new Date()
+    // Create application
+    const application = new Application({
+      job: req.params.id,
+      applicant: req.user.id
     });
 
-    await job.save();
+    await application.save();
 
-    const populatedJob = await Job.findById(job._id)
-      .populate('postedBy', 'name email role')
-      .populate('applicants.user', 'name email skills');
-
-    res.status(201).json(populatedJob);
+    res.json({ message: 'Application submitted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
           // Verify token and fetch user profile
           const response = await axios.get('http://localhost:5000/api/auth/profile');
           setToken(storedToken);
-          setUser(response.data.user);
+          setUser(response.data);
         } catch (err) {
           // Token is invalid, clear it
           console.error('Token validation failed:', err);

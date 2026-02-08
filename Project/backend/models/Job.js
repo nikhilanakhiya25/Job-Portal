@@ -52,7 +52,14 @@ const jobSchema = new mongoose.Schema({
       enum: ['pending', 'reviewed', 'shortlisted', 'rejected'],
       default: 'pending'
     }
-  }]
+  }],
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+  premiumExpiresAt: {
+    type: Date
+  }
 }, {
   timestamps: true
 });

@@ -105,8 +105,14 @@ const deleteResume = async (req, res) => {
   }
 };
 
+const analyzeResume = (req, res) => {
+  const score = Math.floor(Math.random() * 20) + 70;
+  res.json({ resumeScore: score });
+};
+
 module.exports = {
   uploadResume,
   getResume,
-  deleteResume
+  deleteResume,
+  analyzeResume
 };
