@@ -38,19 +38,26 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      const { token: newToken, user: userData } = response.data;
+      const { token: newToken, _id, name, email: userEmail, role, skills, accountStatus } = response.data;
+      
+      // Create clean user object without token
+      const userData = { _id, name, email: userEmail, role, skills, accountStatus };
+      
+      console.log('Login successful - User role:', role); // Debug log
 
       setToken(newToken);
       localStorage.setItem('token', newToken);
       setUser(userData);
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 
-      return { success: true };
+      return { success: true, user: userData };
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
       throw new Error(errorMessage);
     }
   };
+
+
 
   const logout = () => {
     setToken(null);

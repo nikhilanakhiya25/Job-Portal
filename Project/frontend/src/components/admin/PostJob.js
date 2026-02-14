@@ -8,15 +8,10 @@ import {
   Grid,
   Alert,
   MenuItem,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Chip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PremiumUpgrade from './PremiumUpgrade';
 
 const SKILL_OPTIONS = [
   'JavaScript', 'React', 'Node.js', 'Python', 'Java', 'C++', 'C#', 'PHP',

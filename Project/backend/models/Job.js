@@ -59,8 +59,14 @@ const jobSchema = new mongoose.Schema({
   },
   premiumExpiresAt: {
     type: Date
+  },
+  approvalStatus: {
+    type: String,
+    enum: ['approved', 'pending', 'rejected'],
+    default: 'pending'
   }
 }, {
+
   timestamps: true
 });
 

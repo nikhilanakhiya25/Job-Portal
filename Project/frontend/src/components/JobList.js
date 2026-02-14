@@ -24,8 +24,6 @@ import {
   BusinessCenter,
   Search,
   Clear,
-  Favorite,
-  FavoriteBorder,
   Star
 } from '@mui/icons-material';
 import { AuthContext } from '../context/AuthContext';
@@ -46,8 +44,9 @@ const JobList = () => {
   });
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [wishlistJobs, setWishlistJobs] = useState([]);
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(null);
   const { user } = useContext(AuthContext);
+
 
   useEffect(() => {
     fetchJobs();
@@ -59,7 +58,7 @@ const JobList = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [jobs, filters]);
+  }, [jobs, filters, applyFilters]);
 
   const fetchJobs = async () => {
     try {

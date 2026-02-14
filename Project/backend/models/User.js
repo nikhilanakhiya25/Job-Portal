@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
     enum: ['jobseeker', 'recruiter', 'admin'],
     default: 'jobseeker'
   },
+  accountStatus: {
+    type: String,
+    enum: ['active', 'blocked', 'pending'],
+    default: 'active'
+  },
+
   skills: [{
     type: String,
     trim: true

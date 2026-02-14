@@ -22,6 +22,7 @@ export default function ViewApplicants() {
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
 
+
   useEffect(() => {
     fetchApplicants();
   }, []);

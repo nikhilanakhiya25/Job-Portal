@@ -15,7 +15,7 @@ import {
   Card,
   CardContent
 } from '@mui/material';
-import { Person, Email, Phone, LocationOn, Work, School, Save } from '@mui/icons-material';
+import { Person, Save } from '@mui/icons-material';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 

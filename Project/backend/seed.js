@@ -33,7 +33,7 @@ const seedData = async () => {
         name: 'John Doe',
         email: 'user@jobportal.com',
         password: hashedPassword,
-        role: 'user',
+        role: 'jobseeker',
         skills: ['JavaScript', 'React', 'Node.js']
       });
       await user.save();

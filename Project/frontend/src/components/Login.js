@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
@@ -39,14 +38,20 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
-      navigate('/dashboard');
+      const result = await login(formData.email, formData.password);
+      // Redirect based on user role
+      if (result.user && result.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <Container component="main" maxWidth="sm">

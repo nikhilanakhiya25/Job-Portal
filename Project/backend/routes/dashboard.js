@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   getDashboardStats,
+  getPublicStats,
   getMyApplications,
   getJobRecommendations,
   addToWishlist,
@@ -14,6 +15,11 @@ const { protect } = require('../middleware/authMiddleware');
 // @desc    Get dashboard statistics
 // @access  Private
 router.get('/stats', protect, getDashboardStats);
+
+// @route   GET /api/dashboard/public-stats
+// @desc    Get public statistics for homepage
+// @access  Public
+router.get('/public-stats', getPublicStats);
 
 // @route   GET /api/dashboard/my-applications
 // @desc    Get user's applications

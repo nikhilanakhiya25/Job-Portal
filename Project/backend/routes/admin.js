@@ -9,8 +9,10 @@ const {
   getAllJobs,
   updateJobStatus,
   deleteJob,
-  getAnalytics
+  getAnalytics,
+  getActivityLogs
 } = require('../controllers/adminController');
+
 
 // All admin routes require admin role
 router.use(protect);
@@ -74,5 +76,13 @@ router.get('/analytics', (req, res, next) => {
   }
   next();
 }, getAnalytics);
+
+// Activity Logs
+router.get('/logs', (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Access denied. Admin role required.' });
+  }
+  next();
+}, getActivityLogs);
 
 module.exports = router;

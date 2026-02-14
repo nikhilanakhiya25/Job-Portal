@@ -17,7 +17,6 @@ import {
   Business,
   LocationOn,
   AttachMoney,
-  Work,
   Send,
   Delete,
   Favorite

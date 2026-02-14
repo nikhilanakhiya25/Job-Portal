@@ -8,9 +8,13 @@ import Wishlist from './Wishlist';
 import AdminDashboard from './admin/AdminDashboard';
 import PostJob from './admin/PostJob.js';
 import ManageJobs from './admin/ManageJobs';
+import ManageUsers from './admin/ManageUsers';
 import ViewApplicants from './admin/ViewApplicants';
+import ActivityLogs from './admin/ActivityLogs';
+import Analytics from './admin/Analytics';
 import AdminRoute from './AdminRoute';
 import ProtectedRoute from './ProtectedRoute';
+
 
 const ProtectedRoutes = () => {
   return (
@@ -23,7 +27,11 @@ const ProtectedRoutes = () => {
       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       <Route path="/admin/post-job" element={<AdminRoute><PostJob /></AdminRoute>} />
       <Route path="/admin/manage-jobs" element={<AdminRoute><ManageJobs /></AdminRoute>} />
+      <Route path="/admin/manage-users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
       <Route path="/admin/view-applicants" element={<AdminRoute><ViewApplicants /></AdminRoute>} />
+      <Route path="/admin/activity-logs" element={<AdminRoute><ActivityLogs /></AdminRoute>} />
+      <Route path="/admin/analytics" element={<AdminRoute><Analytics /></AdminRoute>} />
+
     </Routes>
   );
 };
