@@ -18,8 +18,8 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  if (user.role !== 'admin') {
-    console.log('AdminRoute - User is not admin, redirecting to dashboard. Role:', user.role);
+  if (user.role !== 'admin' && user.role !== 'recruiter') {
+    console.log('AdminRoute - User is not admin or recruiter, redirecting to dashboard. Role:', user.role);
     return <Navigate to="/dashboard" />;
   }
 

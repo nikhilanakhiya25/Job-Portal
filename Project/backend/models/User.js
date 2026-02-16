@@ -41,10 +41,26 @@ const userSchema = new mongoose.Schema({
   wishlist: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Job'
-  }]
+  }],
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+    default: null
+  },
+  linkedInId: {
+    type: String,
+    default: null
+  },
+  linkedInProfile: {
+    firstName: String,
+    lastName: String,
+    profileUrl: String
+  }
 }, {
+
   timestamps: true
 });
+
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {

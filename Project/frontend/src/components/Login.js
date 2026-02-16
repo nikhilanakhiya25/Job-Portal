@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Container,
   Paper,
@@ -9,27 +9,54 @@ import {
   Alert,
   Link,
   Avatar,
-  Grid
+  Grid,
+  Divider,
+  Chip
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import LinkedInLogin from './LinkedInLogin';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [selectedRole, setSelectedRole] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loginResult, setLoginResult] = useState(null);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Test credentials for different roles
+  const testCredentials = {
+    admin: { email: 'admin@test.com', password: 'admin123' },
+    recruiter: { email: 'recruiter@test.com', password: 'recruiter123' },
+    jobseeker: { email: 'jobseeker@test.com', password: 'jobseeker123' }
+  };
+
+  // Auto-fill jobseeker credentials on component mount
+  useEffect(() => {
+    handleRoleSelect('jobseeker');
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    setFormData({
+      email: testCredentials[role].email,
+      password: testCredentials[role].password
+    });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -39,19 +66,28 @@ const Login = () => {
 
     try {
       const result = await login(formData.email, formData.password);
+      setLoginResult(result);
+      
       // Redirect based on user role
-      if (result.user && result.user.role === 'admin') {
+      const userRole = result.user?.role;
+      
+      if (userRole === 'admin') {
         navigate('/admin');
+      } else if (userRole === 'recruiter') {
+        navigate('/recruiter/dashboard');
+      } else if (userRole === 'jobseeker') {
+        navigate('/jobseeker/dashboard');
       } else {
-        navigate('/dashboard');
+        // Default fallback
+        navigate('/jobseeker/dashboard');
       }
+
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <Container component="main" maxWidth="sm">
@@ -82,6 +118,55 @@ const Login = () => {
               {error}
             </Alert>
           )}
+
+          {loginResult && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              Login successful! Role: <Chip 
+                label={loginResult.user?.role} 
+                color="primary" 
+                size="small" 
+                sx={{ ml: 1 }}
+              />
+            </Alert>
+          )}
+
+          {/* Role Selection for Testing */}
+          <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+            <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+              Quick Test Login (Select Role):
+            </Typography>
+            <Box display="flex" gap={1} flexWrap="wrap">
+              <Button
+                size="small"
+                variant={selectedRole === 'jobseeker' ? 'contained' : 'outlined'}
+                color="primary"
+                onClick={() => handleRoleSelect('jobseeker')}
+              >
+                Job Seeker
+              </Button>
+              <Button
+                size="small"
+                variant={selectedRole === 'recruiter' ? 'contained' : 'outlined'}
+                color="secondary"
+                onClick={() => handleRoleSelect('recruiter')}
+              >
+                Recruiter
+              </Button>
+              <Button
+                size="small"
+                variant={selectedRole === 'admin' ? 'contained' : 'outlined'}
+                color="error"
+                onClick={() => handleRoleSelect('admin')}
+              >
+                Admin
+              </Button>
+            </Box>
+            <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
+              Click a role above to auto-fill test credentials
+            </Typography>
+          </Box>
+
+          <Divider sx={{ mb: 2 }} />
 
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
@@ -119,7 +204,29 @@ const Login = () => {
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
-            <Grid container justifyContent="flex-end">
+            
+            <Divider sx={{ my: 2 }}>
+              <Chip label="OR" size="small" />
+            </Divider>
+            
+            <LinkedInLogin 
+              onSuccess={(data) => {
+                setLoginResult(data);
+                const userRole = data.user?.role;
+                if (userRole === 'admin') {
+                  navigate('/admin');
+                } else if (userRole === 'recruiter') {
+                  navigate('/recruiter/dashboard');
+                } else {
+                  navigate('/jobseeker/dashboard');
+                }
+              }}
+              onError={(errorMsg) => {
+                setError(errorMsg);
+              }}
+            />
+            
+            <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
               <Grid item>
                 <Link component={RouterLink} to="/register" variant="body2">
                   Don't have an account? Sign Up
@@ -132,5 +239,6 @@ const Login = () => {
     </Container>
   );
 };
+
 
 export default Login;

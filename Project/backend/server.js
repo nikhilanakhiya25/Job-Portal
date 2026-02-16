@@ -46,8 +46,10 @@ app.use('/api/match', require('./routes/match'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/company', require('./routes/company'));
 app.use('/api/payment', require('./routes/payment'));
+app.use('/api/recruiter', require('./routes/recruiter'));
 
 // Start server
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

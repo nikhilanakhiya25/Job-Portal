@@ -10,35 +10,53 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jobportal
 const seedData = async () => {
   try {
     // Check if admin user exists
-    let admin = await User.findOne({ role: 'admin' });
+    let admin = await User.findOne({ email: 'admin@test.com' });
     if (!admin) {
       // Create admin user
       const hashedPassword = await bcrypt.hash('admin123', 10);
       admin = new User({
         name: 'Admin',
-        email: 'admin@jobportal.com',
+        email: 'admin@test.com',
         password: hashedPassword,
         role: 'admin'
       });
       await admin.save();
-      console.log('Admin user created');
+      console.log('Admin user created: admin@test.com / admin123');
     }
 
-    // Check if regular user exists
-    let user = await User.findOne({ email: 'user@jobportal.com' });
-    if (!user) {
-      // Create regular user
-      const hashedPassword = await bcrypt.hash('user123', 10);
-      user = new User({
-        name: 'John Doe',
-        email: 'user@jobportal.com',
+
+    // Check if jobseeker user exists
+    let jobseeker = await User.findOne({ email: 'jobseeker@test.com' });
+    if (!jobseeker) {
+      // Create jobseeker user
+      const hashedPassword = await bcrypt.hash('jobseeker123', 10);
+      jobseeker = new User({
+        name: 'Job Seeker',
+        email: 'jobseeker@test.com',
         password: hashedPassword,
         role: 'jobseeker',
         skills: ['JavaScript', 'React', 'Node.js']
       });
-      await user.save();
-      console.log('Regular user created');
+      await jobseeker.save();
+      console.log('Jobseeker user created: jobseeker@test.com / jobseeker123');
     }
+
+    // Check if recruiter user exists
+    let recruiter = await User.findOne({ email: 'recruiter@test.com' });
+    if (!recruiter) {
+      // Create recruiter user
+      const hashedPassword = await bcrypt.hash('recruiter123', 10);
+      recruiter = new User({
+        name: 'Recruiter',
+        email: 'recruiter@test.com',
+        password: hashedPassword,
+        role: 'recruiter',
+        skills: ['Hiring', 'Management']
+      });
+      await recruiter.save();
+      console.log('Recruiter user created: recruiter@test.com / recruiter123');
+    }
+
 
     // Check if jobs already exist
     const existingJobs = await Job.countDocuments();

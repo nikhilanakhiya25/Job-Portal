@@ -47,20 +47,8 @@ const JobList = () => {
   const [saving, setSaving] = useState(null);
   const { user } = useContext(AuthContext);
 
-
-  useEffect(() => {
-    fetchJobs();
-    if (user && user.role === 'jobseeker') {
-      fetchAppliedJobs();
-      fetchWishlist();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    applyFilters();
-  }, [jobs, filters, applyFilters]);
-
   const fetchJobs = async () => {
+
     try {
       setLoading(true);
       const response = await axios.get('http://localhost:5000/api/jobs');
@@ -96,35 +84,13 @@ const JobList = () => {
     }
   };
 
-  const saveToWishlist = async (jobId) => {
-    try {
-      setSaving(jobId);
-      const token = localStorage.getItem('token');
-      if (wishlistJobs.includes(jobId)) {
-        await axios.delete(`http://localhost:5000/api/dashboard/wishlist/${jobId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setWishlistJobs(wishlistJobs.filter(id => id !== jobId));
-      } else {
-        await axios.post(`http://localhost:5000/api/dashboard/wishlist/${jobId}`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setWishlistJobs([...wishlistJobs, jobId]);
-      }
-    } catch (err) {
-      console.error('Failed to update wishlist:', err);
-    } finally {
-      setSaving(null);
-    }
-  };
-
   const applyFilters = useCallback(() => {
     let filtered = [...jobs];
 
     if (filters.search) {
       filtered = filtered.filter(job =>
         job.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        job.company.toLowerCase().includes(filters.search.toLowerCase()) ||
+        job.company.toLowerCase().includes(filters.company.toLowerCase()) ||
         job.description.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
@@ -158,7 +124,43 @@ const JobList = () => {
     setFilteredJobs(filtered);
   }, [jobs, filters]);
 
+  useEffect(() => {
+    fetchJobs();
+    if (user && user.role === 'jobseeker') {
+      fetchAppliedJobs();
+      fetchWishlist();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [jobs, filters, applyFilters]);
+
+  const saveToWishlist = async (jobId) => {
+
+    try {
+      setSaving(jobId);
+      const token = localStorage.getItem('token');
+      if (wishlistJobs.includes(jobId)) {
+        await axios.delete(`http://localhost:5000/api/dashboard/wishlist/${jobId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setWishlistJobs(wishlistJobs.filter(id => id !== jobId));
+      } else {
+        await axios.post(`http://localhost:5000/api/dashboard/wishlist/${jobId}`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setWishlistJobs([...wishlistJobs, jobId]);
+      }
+    } catch (err) {
+      console.error('Failed to update wishlist:', err);
+    } finally {
+      setSaving(null);
+    }
+  };
+
   const handleFilterChange = (field, value) => {
+
     setFilters(prev => ({
       ...prev,
       [field]: value

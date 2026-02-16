@@ -58,6 +58,15 @@ const login = async (req, res) => {
     // Check for user email
     const user = await User.findOne({ email });
 
+    // Check if user account is blocked
+    if (user && user.accountStatus === 'blocked') {
+      return res.status(403).json({ message: 'Your account has been blocked. Please contact admin.' });
+    }
+
+    if (user && user.accountStatus === 'pending') {
+      return res.status(403).json({ message: 'Your account is pending approval. Please wait for admin to approve.' });
+    }
+
     if (user && (await user.comparePassword(password))) {
       res.json({
         _id: user._id,
@@ -70,6 +79,7 @@ const login = async (req, res) => {
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
